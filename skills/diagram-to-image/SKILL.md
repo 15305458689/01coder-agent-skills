@@ -1,11 +1,11 @@
 ---
 name: diagram-to-image
-description: Convert Mermaid diagrams and Markdown tables to images (PNG/SVG) for platforms that don't support rich formatting. Use when user asks to "convert to image", "export as PNG", "make this an image", or has content for X/Twitter that needs visual exports.
+description: Convert Mermaid diagrams and Markdown tables to images (PNG) for platforms that don't support rich formatting. Use when user asks to "convert to image", "export as PNG", "make this an image", or has content for X/Twitter that needs visual exports.
 ---
 
 # Diagram to Image
 
-Convert Mermaid diagrams and Markdown tables to images (PNG/SVG) for use in platforms that don't support rich formatting, like X (Twitter).
+Convert Mermaid diagrams and Markdown tables to PNG images via the mermaid-red API (diagramless.xyz). Produces high-quality, styled output with custom themes — no heavy local dependencies needed.
 
 ## When to Use
 
@@ -17,12 +17,14 @@ Use this skill when:
 
 ## Prerequisites
 
-Ensure dependencies are installed:
+The bundled script uses Node.js built-in `fetch` (Node 18+). No npm install needed.
 
 ```bash
-# Check if mermaid-cli is installed
-which mmdc || npm install -g @mermaid-js/mermaid-cli
+# The render script is bundled with this skill:
+SKILL_DIR=~/.claude/skills/diagram-to-image/scripts
+ls $SKILL_DIR/diagram-to-image.mjs
 ```
+
 
 ## Smart Output Location
 
@@ -113,32 +115,47 @@ else:
 ### Step 3: Create Temporary Input File
 
 ```bash
-# For Mermaid
+# For Mermaid diagrams
 cat > /tmp/diagram.mmd << 'DIAGRAM_EOF'
 <mermaid content>
 DIAGRAM_EOF
 
-# For Markdown table
+# For Markdown tables
 cat > /tmp/table.md << 'TABLE_EOF'
 <table content>
 TABLE_EOF
 ```
 
-### Step 4: Convert
+### Step 4: Convert via mermaid-red API
 
-**Mermaid to PNG:**
+The API auto-detects content type (mermaid vs table). Both use the same command.
+
+**Using the bundled script:**
 ```bash
-mmdc -i /tmp/diagram.mmd -o <output_path>.png -b white -s 2
+# Mermaid diagram
+node ~/.claude/skills/diagram-to-image/scripts/diagram-to-image.mjs /tmp/diagram.mmd -o <output_path>.png
+
+# Markdown table
+node ~/.claude/skills/diagram-to-image/scripts/diagram-to-image.mjs /tmp/table.md -o <output_path>.png
+
+# With custom theme
+node ~/.claude/skills/diagram-to-image/scripts/diagram-to-image.mjs /tmp/diagram.mmd -o <output_path>.png --theme ocean
+
+# Force content type (if auto-detect gets it wrong)
+node ~/.claude/skills/diagram-to-image/scripts/diagram-to-image.mjs /tmp/table.md -o <output_path>.png --type table
 ```
 
-**Mermaid to SVG:**
-```bash
-mmdc -i /tmp/diagram.mmd -o <output_path>.svg -b transparent
-```
+**Available options:**
+- `--theme <name>` — default, dark, forest, neutral, ocean, emerald, midnight, slate, lavender, blueprint
+- `--type <type>` — auto (default), mermaid, table
+- `--scale <n>` — 1-4 (default: 2, for 2x DPI)
+- `--bg <color>` — Background color (default: white, use "transparent" for no bg)
+- `--server <url>` — Override server (default: https://diagramless.xyz)
 
-**Table to PNG:**
+**Piping from stdin also works:**
 ```bash
-python3 ~/.claude/skills/diagram-to-image/scripts/table_to_image.py /tmp/table.md <output_path>.png
+echo "graph TD; A-->B" | node ~/.claude/skills/diagram-to-image/scripts/diagram-to-image.mjs -o out.png
+cat /tmp/table.md | node ~/.claude/skills/diagram-to-image/scripts/diagram-to-image.mjs --type table -o table.png
 ```
 
 ### Step 5: Report Result
@@ -146,7 +163,7 @@ python3 ~/.claude/skills/diagram-to-image/scripts/table_to_image.py /tmp/table.m
 After conversion, tell the user:
 1. **Full path** where image was saved
 2. **Why** that location was chosen (briefly)
-3. **Image dimensions** or file size
+3. **File size** in bytes (printed by the script)
 4. Suggest they can specify a different location if needed
 
 ## Examples
@@ -167,25 +184,24 @@ flowchart TD
 1. Detect `./images/` exists
 2. Analyze content → authentication flow
 3. Generate filename: `login-flow.png`
-4. Output: `./images/login-flow.png`
+4. Save content to `/tmp/diagram.mmd`
+5. Run: `node ~/.claude/skills/diagram-to-image/scripts/diagram-to-image.mjs /tmp/diagram.mmd -o ./images/login-flow.png`
 
 ---
 
-### Example 2: Writing X article about AI
+### Example 2: Writing X article about AI with ocean theme
 
 **Context:** User mentioned writing an article about AI agents for X.
 
-**User:** "Make this a PNG"
+**User:** "Make this a PNG with ocean theme"
 ```
 flowchart LR
     User --> Agent --> Tools --> Response
 ```
 
 **Action:**
-1. No standard image directory found
-2. Context: AI agents article for X
-3. Generate filename: `ai-agent-flow.png`
-4. Output: `./ai-agent-flow.png`
+1. Save content to `/tmp/diagram.mmd`
+2. Run: `node ~/.claude/skills/diagram-to-image/scripts/diagram-to-image.mjs /tmp/diagram.mmd -o ./ai-agent-flow.png --theme ocean`
 
 ---
 
@@ -200,10 +216,9 @@ flowchart LR
 ```
 
 **Action:**
-1. Check for image directories
-2. Analyze content → model comparison
-3. Generate filename: `model-comparison.png`
-4. Output to appropriate location
+1. Save content to `/tmp/table.md`
+2. Run: `node ~/.claude/skills/diagram-to-image/scripts/diagram-to-image.mjs /tmp/table.md -o ./model-comparison.png`
+   (auto-detects as table)
 
 ---
 
@@ -211,11 +226,10 @@ flowchart LR
 
 **User:** "Save this diagram to ~/Desktop/my-chart.png"
 
-**Action:** Use exactly `~/Desktop/my-chart.png` as specified.
+**Action:** Use exactly `~/Desktop/my-chart.png` as output path.
 
 ## Error Handling
 
-- If output directory doesn't exist, create it (with user confirmation for new directories)
-- If file already exists, append number: `auth-flow-2.png`
-- If mmdc not installed: `npm install -g @mermaid-js/mermaid-cli`
-- If Pillow not installed: `pip install pillow`
+- If the API server is unreachable, the script prints a clear error message
+- If content type auto-detection fails, use `--type mermaid` or `--type table` explicitly
+- For local development/testing, use `--server http://localhost:3000`

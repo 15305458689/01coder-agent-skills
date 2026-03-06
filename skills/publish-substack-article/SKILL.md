@@ -88,46 +88,23 @@ Substack does NOT render HTML tables. They collapse into plain text. Any Markdow
 
 1. **Detect tables** in the Markdown file (lines with `|` forming table structure)
 
-2. **Create styled HTML** for each table:
+2. **Convert each table to PNG** using the diagram-to-image skill:
 
-```html
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<style>
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 20px; background: white; }
-table { border-collapse: collapse; width: 100%; font-size: 15px; line-height: 1.6; }
-th { background: #f8f8f8; font-weight: 600; text-align: left; padding: 10px 16px; border-bottom: 2px solid #e0e0e0; }
-td { padding: 8px 16px; border-bottom: 1px solid #eee; }
-tr:hover { background: #fafafa; }
-code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-size: 13px; font-family: 'SF Mono', Menlo, monospace; }
-</style>
-</head>
-<body>
-<table>
-<!-- table content here -->
-</table>
-</body>
-</html>
+```bash
+# Extract table to temp file
+cat > /tmp/table1.md << 'TABLE_EOF'
+| Column 1 | Column 2 | Column 3 |
+|----------|----------|----------|
+| Data 1   | Data 2   | Data 3   |
+TABLE_EOF
+
+# Convert via diagramless.xyz API (auto-detects as table)
+node ~/.claude/skills/diagram-to-image/scripts/diagram-to-image.mjs /tmp/table1.md -o /tmp/table1.png
 ```
 
-3. **Render to screenshot**: Open the HTML file in a browser tab, take a screenshot, close the tab:
+3. **Note the position** of each table in the article for later insertion (after which heading/paragraph)
 
-```
-# Open HTML in new tab
-browser_navigate or new_page: file:///tmp/table1.html
-
-# Take screenshot
-browser_take_screenshot: filename=/tmp/table1.png, fullPage=true
-
-# Close tab and return to editor
-browser_tabs: action=close
-```
-
-4. **Note the position** of each table in the article for later insertion (after which heading/paragraph)
-
-5. **Remove table Markdown** from the content before HTML conversion (so it won't appear as plain text in the pasted content)
+4. **Remove table Markdown** from the content before HTML conversion (so it won't appear as plain text in the pasted content)
 
 **Image upload** happens after pasting the main content — see Step 7.
 
@@ -327,7 +304,7 @@ If you see raw HTML tags or unformatted text:
 
 ### Tables Not Rendering (Shows Plain Text)
 Substack's Tiptap editor does not support HTML tables. They collapse into inline plain text.
-- **Solution**: Convert tables to styled HTML → render as screenshots → upload as images (see Step 0 and Step 7)
+- **Solution**: Convert tables to PNG via diagram-to-image skill → upload as images (see Step 0 and Step 7)
 - **Alternative**: Restructure simple tables as formatted lists
 - **If plain text already pasted**: Triple-click the plain text paragraph to select it, press Backspace to delete, then insert the table image at that position
 
@@ -400,5 +377,5 @@ The following Markdown elements are correctly rendered after HTML conversion and
 | Bullet lists | Yes | |
 | Ordered lists | Yes | |
 | Horizontal rules | Yes | |
-| Tables | No → Image | Convert to styled HTML, screenshot, upload as image |
+| Tables | No → Image | Convert via diagram-to-image skill, upload as image |
 | Images | Manual | Upload via Image toolbar button → file chooser |

@@ -1,7 +1,7 @@
 {
     "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
     "name": "01coder-agent-skills",
-    "version": "1.0.102",
+    "version": "1.0.103",
     "description": "Security scanning and productivity skills for development workflows",
     "owner": {
         "name": "VerySmallWoods",
@@ -45,9 +45,16 @@
         },
         {
             "name": "diagram-to-image",
-            "description": "Convert Mermaid diagrams and Markdown tables to images (PNG/SVG) for platforms that don't support rich formatting",
+            "description": "Convert Mermaid diagrams and Markdown tables to PNG images via diagramless.xyz API. Zero heavy dependencies.",
             "version": "1.0.0",
             "source": "./skills/diagram-to-image",
+            "category": "productivity"
+        },
+        {
+            "name": "cover-image",
+            "description": "Generate hand-drawn cover images for articles with 16 styles and 10 composition layouts",
+            "version": "1.0.0",
+            "source": "./skills/cover-image",
             "category": "productivity"
         }
     ]

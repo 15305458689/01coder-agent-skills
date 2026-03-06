@@ -74,7 +74,7 @@ Once the user answers, remember their subscription type for the rest of the sess
 - Python 3.9+ with dependencies:
   - macOS: `pip install Pillow pyobjc-framework-Cocoa markdown`
   - Windows: `pip install Pillow pywin32 clip-util markdown`
-- For Mermaid diagrams: `npm install -g @mermaid-js/mermaid-cli`
+- diagram-to-image skill (for converting tables/mermaid to PNG via diagramless.xyz API)
 
 ## Scripts
 
@@ -97,10 +97,11 @@ python copy_to_clipboard.py image /path/to/image.jpg [--quality 80]
 python copy_to_clipboard.py html --file /path/to/content.html
 ```
 
-### table_to_image.py
-Convert Markdown tables to PNG images:
+### diagram-to-image.mjs (from diagram-to-image skill)
+Convert Mermaid diagrams and Markdown tables to PNG images via diagramless.xyz API:
 ```bash
-python table_to_image.py /path/to/table.md /path/to/output.png [--style dark|light]
+node ~/.claude/skills/diagram-to-image/scripts/diagram-to-image.mjs /tmp/table.md -o /tmp/table.png
+node ~/.claude/skills/diagram-to-image/scripts/diagram-to-image.mjs /tmp/diagram.mmd -o /tmp/diagram.png --theme ocean
 ```
 
 ## Pre-Processing: Handle Unsupported Elements
@@ -133,8 +134,8 @@ cat > /tmp/table.md << 'TABLE_EOF'
 | Data 1   | Data 2   | Data 3   |
 TABLE_EOF
 
-# 2. Convert to image
-python ~/.claude/skills/publish-x-article/scripts/table_to_image.py /tmp/table.md /tmp/table-001.png
+# 2. Convert to image via diagramless.xyz API
+node ~/.claude/skills/diagram-to-image/scripts/diagram-to-image.mjs /tmp/table.md -o /tmp/table-001.png
 
 # 3. Replace table in markdown with image reference
 # ![Table description](/tmp/table-001.png)
@@ -152,8 +153,8 @@ flowchart TD
     B --> C[End]
 MERMAID_EOF
 
-# 2. Convert to image using mermaid-cli
-mmdc -i /tmp/diagram.mmd -o /tmp/diagram-001.png -b white -s 2
+# 2. Convert to image via diagramless.xyz API
+node ~/.claude/skills/diagram-to-image/scripts/diagram-to-image.mjs /tmp/diagram.mmd -o /tmp/diagram-001.png
 
 # 3. Replace mermaid block in markdown with image reference
 # ![Diagram description](/tmp/diagram-001.png)
@@ -319,11 +320,11 @@ Ask yourself:
 ### Converting Elements to Images
 
 ```bash
-# Tables → PNG
-python ~/.claude/skills/publish-x-article/scripts/table_to_image.py /tmp/table-1.md /tmp/table-1.png
+# Tables → PNG (auto-detected as table)
+node ~/.claude/skills/diagram-to-image/scripts/diagram-to-image.mjs /tmp/table-1.md -o /tmp/table-1.png
 
-# Mermaid → PNG
-mmdc -i /tmp/diagram-1.mmd -o /tmp/diagram-1.png -b white -s 2
+# Mermaid → PNG (auto-detected as mermaid)
+node ~/.claude/skills/diagram-to-image/scripts/diagram-to-image.mjs /tmp/diagram-1.mmd -o /tmp/diagram-1.png
 ```
 
 Replace these elements in the markdown with image references, positioning them where the original element was.
@@ -545,10 +546,10 @@ User: "Publish /path/to/article.md to X"
 # Found: 1 table, 1 mermaid diagram, 2 H3 headers
 
 # Step 0.1: Convert table to image
-python ~/.claude/skills/publish-x-article/scripts/table_to_image.py /tmp/table-1.md /tmp/table-1.png
+node ~/.claude/skills/diagram-to-image/scripts/diagram-to-image.mjs /tmp/table-1.md -o /tmp/table-1.png
 
 # Step 0.2: Convert mermaid to image
-mmdc -i /tmp/mermaid-1.mmd -o /tmp/mermaid-1.png -b white -s 2
+node ~/.claude/skills/diagram-to-image/scripts/diagram-to-image.mjs /tmp/mermaid-1.mmd -o /tmp/mermaid-1.png
 
 # Step 0.3: Create modified markdown with image refs and flattened headers
 # Save to /tmp/article_modified.md
@@ -615,8 +616,9 @@ browser_wait_for time=5  # 无条件等待5秒，浪费时间
 - Check table markdown syntax is valid
 
 ### Mermaid conversion fails
-- Install mermaid-cli: `npm install -g @mermaid-js/mermaid-cli`
+- Check that diagramless.xyz is reachable
 - Check mermaid syntax is valid
+- Try with explicit type: `--type mermaid`
 
 ### Deep headers still showing
 - Manually flatten `###` → `##` or `**bold**`
