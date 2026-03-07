@@ -68,48 +68,59 @@ Write a structured 口播稿 in the user's preferred language. The script should
 
 #### Script Structure
 
+脚本应该像自然对话一样流畅，不要用"开场/引言/正文/总结/CTA"这种模板化结构。按内容逻辑分段，每段用描述性标题 + 时间估算。
+
 ```markdown
+---
+title: "{视频标题}"
+date: "{YYYY-MM-DD}"
+duration: "~X 分钟"
+platform: "YouTube / Bilibili"
+---
+
 # {视频标题}
 
-## 开场 (Hook)
-<!-- 前15-30秒，抓住观众注意力 -->
-<!-- 提出问题/展示结果/制造好奇心 -->
+## Hook（0:00 - 0:10）
 
-## 引言
-<!-- 简要介绍今天要讲的内容 -->
-<!-- 说明为什么这个主题重要/有价值 -->
+{一句话抓住注意力 — 展示结果、抛出问题、或制造好奇心}
 
-## 正文
+大家好我是{名字}，{一两句话引出今天的主题和为什么值得看}。
 
-### 要点一：{小标题}
-<!-- 讲解内容 -->
+## {第一部分描述性标题}（0:10 - 1:30）
 
-### 要点二：{小标题}
-<!-- 讲解内容 -->
+{内容}
 
-### 要点三：{小标题}
-<!-- 讲解内容 -->
+## {第二部分描述性标题}（1:30 - 3:00）
 
-<!-- 根据需要增减要点 -->
+{内容}
 
-## 演示 (Demo) — 如有
-<!-- 屏幕操作步骤说明 -->
+（展示 xxx 对比示例）
 
-## 总结
-<!-- 回顾要点 -->
-<!-- 给出行动建议 -->
+## {第三部分描述性标题}（3:00 - 5:00）
 
-## 结尾 (CTA)
-<!-- 引导点赞、关注、评论 -->
+我们现在直接来操作。
+
+（录屏开始）
+
+{操作步骤说明}
+
+<!-- TODO: 补充实际操作截图 -->
+
+## {收尾}（5:00 - 6:00）
+
+{自然收束，回顾要点，给出行动建议}
+
+好了今天的分享就到这里，感谢大家收看，我们下期再见。
 ```
 
 #### Script Writing Guidelines
 
-1. **口语化**：写出来的是要说的话，不是文章。用短句，避免书面语。
-2. **节奏感**：每个段落不要太长，适合口播节奏。关键概念后留停顿。
-3. **具体化**：用具体例子和类比解释抽象概念。
-4. **过渡自然**：段落之间用口语化过渡（"接下来"、"说到这个"、"那么问题来了"）。
-5. **时间把控**：中文口播约 200-250 字/分钟，英文约 130-150 词/分钟。根据目标时长控制篇幅。
+1. **Hook 极短**：第一句话就要抓人 — 用一个结果、一个反直觉的事实、或一个问题。然后自然带出自我介绍和主题背景。
+2. **按内容分段，不按模板**：章节标题是描述性的（"安装配置"、"登录演示"），不是编号式的（"要点一"、"第三章"）。每段标题后标注时间估算 `(起始 - 结束)`。
+3. **口语化**：写出来的是要说的话，不是文章。用短句，用"先澄清一点"、"那为什么还要折腾"、"问题出在...上"这种口语表达。
+4. **制作备注**：在需要录屏、展示素材的地方加制作提示，用 `（录屏开始）`、`（展示 xxx）` 格式。未确定的内容用 `<!-- TODO: 补充... -->` 标记。
+5. **结尾自然**：不需要仪式感的"请点赞关注"。简短回顾，自然收束。
+6. **时间把控**：中文口播约 200-250 字/分钟，英文约 130-150 词/分钟。根据目标时长控制篇幅。
 
 ### Step 5: Write Meta (meta.md)
 
@@ -213,9 +224,66 @@ Save to auto memory directory as `video-promo.md` (e.g. `~/.claude/projects/.../
 
 ### Example 1: User provides topic directly
 
-**User**: 帮我写一期视频脚本，主题是 Docker 入门，面向编程初学者，大约8分钟
+**User**: 帮我写一期视频脚本，主题是用 Turborepo 管理 monorepo，面向前端开发者，大约6分钟
 
-**Claude**: Confirms understanding, creates `./2026-03-07-docker-intro/`, generates script.md and meta.md.
+**Claude**: Confirms understanding, creates `./videos/2026-03-07-turborepo-monorepo/`, generates script.md and meta.md.
+
+**script.md (excerpt)**:
+
+```markdown
+---
+title: "Turborepo：让你的 monorepo 构建快 10 倍"
+date: "2026-03-07"
+duration: "~6 分钟"
+platform: "YouTube / Bilibili"
+---
+
+# Turborepo：让你的 monorepo 构建快 10 倍
+
+## Hook（0:00 - 0:10）
+
+我的项目有 12 个包，完整构建从 8 分钟降到了 45 秒。
+
+大家好我是 xxx，今天来聊聊 Turborepo — 它是怎么做到这件事的，以及你的项目该不该用它。
+
+## 为什么 monorepo 构建这么慢（0:10 - 1:00）
+
+先说问题。你有一个 monorepo，里面放了前端应用、组件库、工具函数、后端服务。改了一行代码，CI 把所有包全构建一遍。
+
+其实大部分包根本没变。问题出在构建工具不知道包之间的依赖关系，只能全量跑。
+
+## Turborepo 的核心思路（1:00 - 2:30）
+
+Turborepo 做的事情很简单 — 它分析包之间的依赖图，只构建真正受影响的包。
+
+再加上远程缓存，同一份代码在 CI 上构建过一次，你本地 pull 下来就不用再跑了。
+
+（展示 turbo run build 的输出对比：全量 vs 增量）
+
+## 上手配置（2:30 - 4:30）
+
+我们直接来操作。
+
+（录屏开始）
+
+<!-- TODO: 补充实际安装和 turbo.json 配置步骤 -->
+
+首先在项目根目录安装 Turborepo……
+
+然后是 turbo.json 的配置……
+
+## 实际效果（4:30 - 5:30）
+
+（展示构建时间对比截图）
+
+<!-- TODO: 补充实际数据 -->
+
+## 收尾（5:30 - 6:00）
+
+Turborepo 不是银弹，小项目没必要上。但如果你的 monorepo 已经开始因为构建速度拖慢开发效率，它值得试一下。
+
+好了今天的分享就到这里，感谢大家收看，我们下期再见。
+```
 
 **meta.md (excerpt)**:
 
@@ -224,44 +292,37 @@ Save to auto memory directory as `video-promo.md` (e.g. `~/.claude/projects/.../
 
 ## 标题
 
-5分钟学会 Docker：从零开始的容器化之旅
+Turborepo：让你的 monorepo 构建快 10 倍
 
 ## 标题备选
 
-- Docker 新手教程：告别"在我电脑上能跑"
-- 编程初学者必看：Docker 到底是什么？
+- monorepo 构建太慢？Turborepo 帮你解决
+- 告别全量构建：Turborepo 实战
 
 ## 描述
 
-还在为环境配置头疼吗？Docker 帮你一键搞定。这期视频从零开始，用最通俗的方式带你理解 Docker 的核心概念。
+monorepo 项目构建越来越慢？Turborepo 通过依赖图分析和远程缓存，只构建真正变化的包。这期视频从原理到实操，带你快速上手。
 
-#docker #容器化 #编程入门 #devops #教程
+#turborepo #monorepo #前端工程化 #vercel
 
-- 加入社群：https://example.com/community
-- Twitter: https://twitter.com/example
-- Bilibili: https://space.bilibili.com/example
-- 邮箱：contact@example.com
-
-本期视频涵盖 Docker 的基本概念、安装、常用命令和第一个容器实战。
+{推广信息}
 
 ## 标签 (Tags)
 
-#docker #容器 #编程入门 #devops #教程 #docker入门 #容器化
+#turborepo #monorepo #前端 #构建优化 #vercel #工程化
 
 ## 章节 (Chapters)
 
 00:00 引言
-00:25 Docker 是什么？一个类比讲清楚
-01:30 为什么你需要 Docker
-02:45 安装 Docker
-03:30 核心概念：镜像 vs 容器
-04:45 动手：运行第一个容器
-06:30 常用命令速查
-07:30 总结与下一步
+00:10 为什么 monorepo 构建慢
+01:00 Turborepo 核心思路
+02:30 上手配置
+04:30 实际效果
+05:30 总结
 
 ## 封面建议
 
-Docker 鲸鱼 logo 居中，背景用浅蓝色渐变，左上角放"入门教程"标签，整体风格简洁现代。
+Turborepo logo + 构建速度对比（8min → 45s），背景用深色调，突出速度提升数字。
 ```
 
 ### Example 2: User provides reference material
