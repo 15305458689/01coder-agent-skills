@@ -1,7 +1,7 @@
 {
     "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
     "name": "01coder-agent-skills",
-    "version": "1.2.0",
+    "version": "2.0.0",
     "description": "Security scanning, content creation, and productivity skills for development workflows",
     "owner": {
         "name": "VerySmallWoods",
@@ -9,19 +9,12 @@
     },
     "plugins": [
         {
-            "name": "01coder-security",
-            "description": "Security scanning skills for Next.js and Python projects",
+            "name": "01coder-skills",
+            "description": "Security scanning, content creation, publishing, and productivity skills by VerySmallWoods",
             "source": "./",
             "skills": [
                 "./skills/nextjs-security-scan",
-                "./skills/python-security-scan"
-            ]
-        },
-        {
-            "name": "01coder-content",
-            "description": "Content creation, publishing, and writing style skills",
-            "source": "./",
-            "skills": [
+                "./skills/python-security-scan",
                 "./skills/video-script",
                 "./skills/share-reading",
                 "./skills/publish-x-article",
@@ -29,14 +22,7 @@
                 "./skills/publish-substack-article",
                 "./skills/personal-writing-style",
                 "./skills/cover-image",
-                "./skills/diagram-to-image"
-            ]
-        },
-        {
-            "name": "01coder-productivity",
-            "description": "Subtitle correction, stock analysis, interactive input, and other productivity tools",
-            "source": "./",
-            "skills": [
+                "./skills/diagram-to-image",
                 "./skills/subtitle-correction",
                 "./skills/china-stock-analysis",
                 "./skills/interactive-input",

@@ -32,15 +32,15 @@ This repo is a **marketplace** — a catalog of plugins that users add to Claude
 
 ### marketplace.json Structure
 
-Skills are grouped into plugins by category. Each plugin uses:
+All skills are bundled in a single plugin `01coder-skills`. The plugin uses:
 - `"source": "./"` — plugin root is the repo root
-- `"skills": [...]` — explicit list of skill directory paths
+- `"skills": [...]` — explicit list of all skill directory paths
 
 ```json
 {
     "plugins": [
         {
-            "name": "content-skills",
+            "name": "01coder-skills",
             "source": "./",
             "skills": [
                 "./skills/video-script",
@@ -51,13 +51,16 @@ Skills are grouped into plugins by category. Each plugin uses:
 }
 ```
 
-This structure ensures that when a plugin is installed and cached, the `skills/` directory hierarchy is preserved and Claude Code can discover the SKILL.md files.
+This structure ensures that when the plugin is installed and cached, the `skills/` directory hierarchy is preserved and Claude Code can discover the SKILL.md files.
 
-### Current Plugin Groups
+### Installation
 
-- **security-skills** — nextjs-security-scan, python-security-scan
-- **content-skills** — video-script, share-reading, publish-x-article, publish-zsxq-article, publish-substack-article, personal-writing-style, cover-image, diagram-to-image
-- **productivity-skills** — subtitle-correction, china-stock-analysis, interactive-input, add-feishu
+```
+/plugin marketplace add sugarforever/01coder-agent-skills
+/plugin install 01coder-skills@01coder-agent-skills
+```
+
+New skills are picked up automatically on marketplace update — no reinstall needed.
 
 ## Adding a New Skill
 
