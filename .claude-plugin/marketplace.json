@@ -1,110 +1,47 @@
 {
     "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
     "name": "01coder-agent-skills",
-    "version": "1.0.103",
-    "description": "Security scanning and productivity skills for development workflows",
+    "version": "1.1.0",
+    "description": "Security scanning, content creation, and productivity skills for development workflows",
     "owner": {
         "name": "VerySmallWoods",
         "email": "0001coder@gmail.com"
     },
     "plugins": [
         {
-            "name": "nextjs-security-scan",
-            "description": "Security scanning skill for Next.js applications",
-            "version": "1.0.0",
-            "source": "./skills/nextjs-security-scan",
-            "category": "security"
+            "name": "security-skills",
+            "description": "Security scanning skills for Next.js and Python projects",
+            "source": "./",
+            "skills": [
+                "./skills/nextjs-security-scan",
+                "./skills/python-security-scan"
+            ]
         },
         {
-            "name": "python-security-scan",
-            "description": "Security scanning skill for Python projects",
-            "version": "1.0.0",
-            "source": "./skills/python-security-scan",
-            "category": "security"
+            "name": "content-skills",
+            "description": "Content creation, publishing, and writing style skills",
+            "source": "./",
+            "skills": [
+                "./skills/video-script",
+                "./skills/share-reading",
+                "./skills/publish-x-article",
+                "./skills/publish-zsxq-article",
+                "./skills/publish-substack-article",
+                "./skills/personal-writing-style",
+                "./skills/cover-image",
+                "./skills/diagram-to-image"
+            ]
         },
         {
-            "name": "subtitle-correction",
-            "description": "Correct speech recognition errors in SRT subtitle files with word-level diff reports",
-            "version": "1.0.0",
-            "source": "./skills/subtitle-correction",
-            "category": "productivity"
-        },
-        {
-            "name": "publish-x-article",
-            "description": "Publish Markdown articles to X (Twitter) with automatic conversion of tables and mermaid diagrams to images",
-            "version": "1.0.0",
-            "source": "./skills/publish-x-article",
-            "category": "productivity"
-        },
-        {
-            "name": "china-stock-analysis",
-            "description": "A股价值投资分析工具，提供股票筛选、个股深度分析、行业对比和估值计算功能。基于价值投资理论，使用akshare获取公开财务数据。",
-            "version": "1.0.0",
-            "source": "./skills/china-stock-analysis",
-            "category": "productivity"
-        },
-        {
-            "name": "diagram-to-image",
-            "description": "Convert Mermaid diagrams and Markdown tables to PNG images via diagramless.xyz API. Zero heavy dependencies.",
-            "version": "1.0.0",
-            "source": "./skills/diagram-to-image",
-            "category": "productivity"
-        },
-        {
-            "name": "cover-image",
-            "description": "Generate hand-drawn cover images for articles with 16 styles and 10 composition layouts",
-            "version": "1.0.0",
-            "source": "./skills/cover-image",
-            "category": "productivity"
-        },
-        {
-            "name": "publish-zsxq-article",
-            "description": "Publish Markdown articles to Zsxq (知识星球) as drafts via browser automation",
-            "version": "1.0.0",
-            "source": "./skills/publish-zsxq-article",
-            "category": "productivity"
-        },
-        {
-            "name": "publish-substack-article",
-            "description": "Publish Markdown articles to Substack as drafts with HTML conversion and table-to-image support",
-            "version": "1.0.0",
-            "source": "./skills/publish-substack-article",
-            "category": "productivity"
-        },
-        {
-            "name": "personal-writing-style",
-            "description": "Personal writing style preferences for consistent punctuation, formatting, and article structure",
-            "version": "1.0.0",
-            "source": "./skills/personal-writing-style",
-            "category": "productivity"
-        },
-        {
-            "name": "add-feishu",
-            "description": "Add Feishu (飞书/Lark) as a channel via WebSocket long connection mode",
-            "version": "1.0.0",
-            "source": "./skills/add-feishu",
-            "category": "productivity"
-        },
-        {
-            "name": "interactive-input",
-            "description": "Rich interactive UI components (quizzes, forms, multiple choice) in chat responses",
-            "version": "1.0.0",
-            "source": "./skills/interactive-input",
-            "category": "productivity"
-        },
-        {
-            "name": "share-reading",
-            "description": "Draft social media posts to share articles and readings on X, Substack, and 知识星球",
-            "version": "1.0.0",
-            "source": "./skills/share-reading",
-            "category": "productivity"
-        },
-        {
-            "name": "video-script",
-            "description": "Create video scripts (口播稿) and publishing materials for YouTubers/UP主",
-            "version": "1.0.0",
-            "source": "./skills/video-script",
-            "category": "productivity"
+            "name": "productivity-skills",
+            "description": "Subtitle correction, stock analysis, interactive input, and other productivity tools",
+            "source": "./",
+            "skills": [
+                "./skills/subtitle-correction",
+                "./skills/china-stock-analysis",
+                "./skills/interactive-input",
+                "./skills/add-feishu"
+            ]
         }
     ]
 }
