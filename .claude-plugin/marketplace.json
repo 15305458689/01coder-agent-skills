@@ -56,6 +56,55 @@
             "version": "1.0.0",
             "source": "./skills/cover-image",
             "category": "productivity"
+        },
+        {
+            "name": "publish-zsxq-article",
+            "description": "Publish Markdown articles to Zsxq (知识星球) as drafts via browser automation",
+            "version": "1.0.0",
+            "source": "./skills/publish-zsxq-article",
+            "category": "productivity"
+        },
+        {
+            "name": "publish-substack-article",
+            "description": "Publish Markdown articles to Substack as drafts with HTML conversion and table-to-image support",
+            "version": "1.0.0",
+            "source": "./skills/publish-substack-article",
+            "category": "productivity"
+        },
+        {
+            "name": "personal-writing-style",
+            "description": "Personal writing style preferences for consistent punctuation, formatting, and article structure",
+            "version": "1.0.0",
+            "source": "./skills/personal-writing-style",
+            "category": "productivity"
+        },
+        {
+            "name": "add-feishu",
+            "description": "Add Feishu (飞书/Lark) as a channel via WebSocket long connection mode",
+            "version": "1.0.0",
+            "source": "./skills/add-feishu",
+            "category": "productivity"
+        },
+        {
+            "name": "interactive-input",
+            "description": "Rich interactive UI components (quizzes, forms, multiple choice) in chat responses",
+            "version": "1.0.0",
+            "source": "./skills/interactive-input",
+            "category": "productivity"
+        },
+        {
+            "name": "share-reading",
+            "description": "Draft social media posts to share articles and readings on X, Substack, and 知识星球",
+            "version": "1.0.0",
+            "source": "./skills/share-reading",
+            "category": "productivity"
+        },
+        {
+            "name": "video-script",
+            "description": "Create video scripts (口播稿) and publishing materials for YouTubers/UP主",
+            "version": "1.0.0",
+            "source": "./skills/video-script",
+            "category": "productivity"
         }
     ]
 }
